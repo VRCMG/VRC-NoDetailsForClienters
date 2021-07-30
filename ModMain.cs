@@ -25,13 +25,17 @@ namespace NoDetailsForClienters
 	{
 		private const string PreferencesIdentifier = "NoDetailsForClienters";
 		private static MelonPreferences_Category PreferencesCategory;
-		private static MelonPreferences_Entry<int> PreferenceFPS, PreferencePing;
+		private static MelonPreferences_Entry<float> PreferenceFPS, PreferenceFPSVariance;
+		private static MelonPreferences_Entry<int> PreferencePing, PreferencePingVariance;
+
 
 		public override void OnApplicationStart()
 		{
 			PreferencesCategory = MelonPreferences.CreateCategory(PreferencesIdentifier, BuildInfo.name);
-			PreferenceFPS = PreferencesCategory.CreateEntry("SpoofFPS", -1, "FPS to spoof to (disable with negative value)");
-			PreferencePing = PreferencesCategory.CreateEntry("SpoofPing", -1, "Ping to spoof to (disable with negative value)");
+			PreferenceFPS = PreferencesCategory.CreateEntry("SpoofFPS", -1f, "FPS to spoof to (disable with < 0)");
+			PreferencePing = PreferencesCategory.CreateEntry("SpoofPing", -1, "Ping to spoof to (disable with < 0)");
+			PreferenceFPSVariance = PreferencesCategory.CreateEntry("SpoofFPSVariance", 0f, "Max random addition to spoofed FPS (disable with <= 0)");
+			PreferencePingVariance = PreferencesCategory.CreateEntry("SpoofPingVariance", 0, "Max random addition to spoofed ping (disable with <= 0");
 
 			try
 			{
@@ -58,17 +62,25 @@ namespace NoDetailsForClienters
 			}
 		}
 
+
+
 		private static bool PatchFPS(ref float __result)
 		{
 			if (PreferenceFPS.Value < 0) return true;
-			__result = 1f / (float)PreferenceFPS.Value;
+			var val = PreferenceFPS.Value;
+			if (PreferenceFPSVariance.Value > 0)
+				val += (PreferenceFPSVariance.Value) * (float)(new System.Random().NextDouble());
+			__result = 1f / val;
 			return false;
 		}
 
 		private static bool PatchPing(ref int __result)
 		{
 			if (PreferencePing.Value < 0) return true;
-			__result = PreferencePing.Value;
+			var val = PreferencePing.Value;
+			if (PreferencePingVariance.Value > 0)
+				val += new System.Random().Next(0, PreferencePingVariance.Value);
+			__result = val;
 			return false;
 		}
 	}
