@@ -15,7 +15,7 @@ As an additional warning, the reason this mod is not verified in the modding gro
 
 > Ping/FPS spoofing is known to break IK interpolation, is easily detectable by VRC (if they wanted to), and those numbers are available in vanilla client via debug overlays. Lots of downsides for vanishingly little benefit
 
-I personally believe though that it should be up to each individual to determine if the benefits outweigh the downsides.
+The mentioned concerns are of course valid, but I personally believe that it should be up to each individual to determine if the benefits outweigh the downsides.
 
 ## Usage
 
