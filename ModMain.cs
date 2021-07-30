@@ -18,7 +18,7 @@ namespace NoDetailsForClienters
 
 		public const string name = "No Details For Clienters";
 
-		public const string version = "0.1.0";
+		public const string version = "0.1.1";
 	}
 
 	public class NoDetailsForClientersMod : MelonMod
@@ -47,6 +47,8 @@ namespace NoDetailsForClienters
 			PreferencVarianceMin = PreferencesCategory.CreateEntry("VarianceMinInterval", 1000, "Min interval variance");
 			PreferencVarianceMax = PreferencesCategory.CreateEntry("VarianceMaxInterval", 2000, "Max interval variance");
 
+			var patchingSuccess = true;
+
 			try // Patch `UnityEngine.Time.smoothDeltaTime` to use our Harmony PatchFPS Prefix
 			{
 				HarmonyInstance.Patch(
@@ -56,7 +58,8 @@ namespace NoDetailsForClienters
 			}
 			catch (System.Exception ex)
 			{
-				MelonLogger.Msg($"Failed to patch FPS: {ex}");
+				patchingSuccess = false;
+				MelonLogger.Error($"Failed to patch FPS: {ex}");
 			}
 
 			try // Patch `ExitGames.Client.Photon.PhotonPeer.RoundTripTime` to use our Harmony PatchPing Prefix
@@ -68,8 +71,11 @@ namespace NoDetailsForClienters
 			}
 			catch (System.Exception ex)
 			{
-				MelonLogger.Msg($"Failed to patch ping: {ex}");
+				patchingSuccess = false;
+				MelonLogger.Error($"Failed to patch ping: {ex}");
 			}
+
+			if (patchingSuccess) MelonLogger.Msg("Applied successfully.");
 		}
 
 		// No need to run variance updates on so often as Update, so using OnFixedUpdate
