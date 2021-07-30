@@ -3,13 +3,15 @@
 A mod to spoof values such as FPS and Ping.
 
 Because some VRC mods show those values for other people.
-Even though they're normally meant to be only visible to yourself in the game's UI.
+Even though they're regularly only visible to yourself in standard game UIs'.
+
+This mod's intent is to give users more options for privacy, since not everyone wants others to know how good or bad your PC & internet is.
 
 ## Warning
 
 Modding is of course against VRC TOS. And of course this mod is provided without any warranty.
 
-As an additional warning, the reason this mod's not verified in the modding group is as follows:
+As an additional warning, the reason this mod is not verified in the modding group is as follows:
 
 > Ping/FPS spoofing is known to break IK interpolation, is easily detectable by VRC (if they wanted to), and those numbers are available in vanilla client via debug overlays. Lots of downsides for vanishingly little benefit
 
