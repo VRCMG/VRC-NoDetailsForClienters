@@ -70,11 +70,11 @@ namespace NoDetailsForClienters
 			{
 				_next_variance_update_after = System.DateTime.Now.AddSeconds(1);
 				if (PreferenceFPSVariance.Value > 0)
-					VarianceFPS += (PreferenceFPSVariance.Value) * (float)(new System.Random().NextDouble());
+					VarianceFPS = (PreferenceFPSVariance.Value) * (float)(new System.Random().NextDouble());
 				else VarianceFPS = 0f;
 
 				if (PreferencePingVariance.Value > 0)
-					VariancePing += new System.Random().Next(0, PreferencePingVariance.Value);
+					VariancePing = new System.Random().Next(0, PreferencePingVariance.Value);
 				else VariancePing = 0;
 			}
 		}
