@@ -27,7 +27,7 @@ namespace NoDetailsForClienters
 		private static MelonPreferences_Category PreferencesCategory;
 		private static MelonPreferences_Entry<float> PreferenceFPS, PreferenceFPSVariance;
 		private static float VarianceFPS = 0f;
-		private static MelonPreferences_Entry<int> PreferencePing, PreferencePingVariance;
+		private static MelonPreferences_Entry<int> PreferencePing, PreferencePingVariance, PreferencVarianceMin, PreferencVarianceMax;
 		private static int VariancePing = 0;
 		private System.DateTime _next_variance_update_after = System.DateTime.Now;
 
@@ -38,6 +38,8 @@ namespace NoDetailsForClienters
 			PreferencePing = PreferencesCategory.CreateEntry("SpoofPing", -1, "Ping to spoof to (disable with < 0)");
 			PreferenceFPSVariance = PreferencesCategory.CreateEntry("SpoofFPSVariance", 0f, "Max random addition to spoofed FPS (disable with <= 0)");
 			PreferencePingVariance = PreferencesCategory.CreateEntry("SpoofPingVariance", 0, "Max random addition to spoofed ping (disable with <= 0");
+			PreferencVarianceMin = PreferencesCategory.CreateEntry("VarianceMinInterval", 800, "Min interval variance");
+			PreferencVarianceMax = PreferencesCategory.CreateEntry("VarianceMaxInterval", 3000, "Max interval variance");
 
 			try
 			{
@@ -68,14 +70,15 @@ namespace NoDetailsForClienters
 		{
 			if (_next_variance_update_after < System.DateTime.Now)
 			{
-				_next_variance_update_after = System.DateTime.Now.AddSeconds(1);
-				if (PreferenceFPSVariance.Value > 0)
-					VarianceFPS = (PreferenceFPSVariance.Value) * (float)(new System.Random().NextDouble());
-				else VarianceFPS = 0f;
+				var rng = new System.Random();
+				_next_variance_update_after =
+					System.DateTime.Now.AddMilliseconds(rng.Next(PreferencVarianceMin.Value, PreferencVarianceMax.Value));
 
-				if (PreferencePingVariance.Value > 0)
-					VariancePing = new System.Random().Next(0, PreferencePingVariance.Value);
-				else VariancePing = 0;
+				if (PreferenceFPSVariance.Value <= 0) VarianceFPS = 0f;
+				else VarianceFPS = (PreferenceFPSVariance.Value) * (float)rng.NextDouble();
+
+				if (PreferencePingVariance.Value <= 0) VariancePing = 0;
+				else VariancePing = rng.Next(0, PreferencePingVariance.Value);
 			}
 		}
 
