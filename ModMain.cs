@@ -18,30 +18,36 @@ namespace NoDetailsForClienters
 
 		public const string name = "No Details For Clienters";
 
-		public const string version = "0.0.1";
+		public const string version = "0.1.0";
 	}
 
 	public class NoDetailsForClientersMod : MelonMod
 	{
-		private const string PreferencesIdentifier = "NoDetailsForClienters";
 		private static MelonPreferences_Category PreferencesCategory;
 		private static MelonPreferences_Entry<float> PreferenceFPS, PreferenceFPSVariance;
-		private static float VarianceFPS = 0f;
 		private static MelonPreferences_Entry<int> PreferencePing, PreferencePingVariance, PreferencVarianceMin, PreferencVarianceMax;
+
+		// A value to be added to the configured FPS spoof value
+		private static float VarianceFPS = 0f;
+		// A value to be added to the configured ping spoof value
 		private static int VariancePing = 0;
+		// Time for when next variance update can be run after.
 		private System.DateTime _next_variance_update_after = System.DateTime.Now;
+
+		private const string PreferencesIdentifier = "NoDetailsForClienters";
 
 		public override void OnApplicationStart()
 		{
+			// Preferences setup
 			PreferencesCategory = MelonPreferences.CreateCategory(PreferencesIdentifier, BuildInfo.name);
 			PreferenceFPS = PreferencesCategory.CreateEntry("SpoofFPS", -1f, "FPS to spoof to (disable with < 0)");
 			PreferencePing = PreferencesCategory.CreateEntry("SpoofPing", -1, "Ping to spoof to (disable with < 0)");
 			PreferenceFPSVariance = PreferencesCategory.CreateEntry("SpoofFPSVariance", 0f, "Max random addition to spoofed FPS (disable with <= 0)");
 			PreferencePingVariance = PreferencesCategory.CreateEntry("SpoofPingVariance", 0, "Max random addition to spoofed ping (disable with <= 0");
-			PreferencVarianceMin = PreferencesCategory.CreateEntry("VarianceMinInterval", 800, "Min interval variance");
-			PreferencVarianceMax = PreferencesCategory.CreateEntry("VarianceMaxInterval", 3000, "Max interval variance");
+			PreferencVarianceMin = PreferencesCategory.CreateEntry("VarianceMinInterval", 1000, "Min interval variance");
+			PreferencVarianceMax = PreferencesCategory.CreateEntry("VarianceMaxInterval", 2000, "Max interval variance");
 
-			try
+			try // Patch `UnityEngine.Time.smoothDeltaTime` to use our Harmony PatchFPS Prefix
 			{
 				HarmonyInstance.Patch(
 					typeof(Time).GetProperty("smoothDeltaTime").GetGetMethod(),
@@ -53,7 +59,7 @@ namespace NoDetailsForClienters
 				MelonLogger.Msg($"Failed to patch FPS: {ex}");
 			}
 
-			try
+			try // Patch `ExitGames.Client.Photon.PhotonPeer.RoundTripTime` to use our Harmony PatchPing Prefix
 			{
 				HarmonyInstance.Patch(
 					typeof(ExitGames.Client.Photon.PhotonPeer).GetProperty("RoundTripTime").GetGetMethod(),
@@ -66,8 +72,10 @@ namespace NoDetailsForClienters
 			}
 		}
 
+		// No need to run variance updates on so often as Update, so using OnFixedUpdate
 		public override void OnFixedUpdate()
 		{
+			// Only run variance every so often so that it doesn't jitter so much in an obvious way.
 			if (_next_variance_update_after < System.DateTime.Now)
 			{
 				var rng = new System.Random();
@@ -82,20 +90,22 @@ namespace NoDetailsForClienters
 			}
 		}
 
-
-
+		// The patch for spoofing FPS
 		private static bool PatchFPS(ref float __result)
 		{
+			// Run original getter if spoofing is disabled
 			if (PreferenceFPS.Value < 0) return true;
-			var val = PreferenceFPS.Value;
-
-			__result = 1f / (val + VarianceFPS);
+			// Otherwise use our value and don't run original getter.
+			__result = 1f / (PreferenceFPS.Value + VarianceFPS);
 			return false;
 		}
 
+		// The patch for spoofing ping
 		private static bool PatchPing(ref int __result)
 		{
+			// Run original getter if spoofing is disabled
 			if (PreferencePing.Value < 0) return true;
+			// Otherwise use our value and don't run original getter.
 			__result = PreferencePing.Value + VariancePing;
 			return false;
 		}
