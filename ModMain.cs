@@ -61,11 +61,7 @@ namespace NoDetailsForClienters
 		private static bool PatchFPS(ref float __result)
 		{
 			if (PreferenceFPS.Value < 0) return true;
-			//  FPS = 1000 / __result
-			// * __result
-			// FPS * __result = 1000
-			// /FPS
-			__result = 1000f / (float)PreferenceFPS.Value;
+			__result = 1f / (float)PreferenceFPS.Value;
 			return false;
 		}
 
