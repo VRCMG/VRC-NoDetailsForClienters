@@ -1,6 +1,7 @@
 using MelonLoader;
 using UnityEngine;
 using HarmonyLib;
+using System.Reflection;
 
 [assembly: MelonInfo(typeof(NoDetailsForClienters.NoDetailsForClientersMod), NoDetailsForClienters.BuildInfo.name, NoDetailsForClienters.BuildInfo.version, NoDetailsForClienters.BuildInfo.authors, NoDetailsForClienters.BuildInfo.downloadLink)]
 [assembly: MelonGame("VRChat", "VRChat")]
@@ -31,20 +32,40 @@ namespace NoDetailsForClienters
 			PreferencesCategory = MelonPreferences.CreateCategory(PreferencesIdentifier, BuildInfo.name);
 			PreferenceFPS = PreferencesCategory.CreateEntry("SpoofFPS", -1, "FPS to spoof to (disable with negative value)");
 			PreferencePing = PreferencesCategory.CreateEntry("SpoofPing", -1, "Ping to spoof to (disable with negative value)");
+
+			try
+			{
+				HarmonyInstance.Patch(
+					typeof(Time).GetProperty("smoothDeltaTime").GetGetMethod(),
+					prefix: new HarmonyMethod(typeof(NoDetailsForClientersMod).GetMethod("PatchFPS", BindingFlags.NonPublic | BindingFlags.Static))
+				);
+			}
+			catch (System.Exception ex)
+			{
+				MelonLogger.Msg($"Failed to patch FPS: {ex}");
+			}
+
+			try
+			{
+				HarmonyInstance.Patch(
+					typeof(ExitGames.Client.Photon.PhotonPeer).GetProperty("RoundTripTime").GetGetMethod(),
+					prefix: new HarmonyMethod(typeof(NoDetailsForClientersMod).GetMethod("PatchPing", BindingFlags.NonPublic | BindingFlags.Static))
+				);
+			}
+			catch (System.Exception ex)
+			{
+				MelonLogger.Msg($"Failed to patch ping: {ex}");
+			}
 		}
 
-		[HarmonyPatch(typeof(Time), "smoothDeltaTime", MethodType.Getter)]
-		[HarmonyPrefix]
-		static bool PatchFPS(ref float __result)
+		private static bool PatchFPS(ref float __result)
 		{
 			if (PreferenceFPS.Value < 0) return true;
 			__result = PreferenceFPS.Value;
 			return false;
 		}
 
-		[HarmonyPatch(typeof(ExitGames.Client.Photon.PhotonPeer), "RoundTripTime", MethodType.Getter)]
-		[HarmonyPrefix]
-		static bool PatchPing(ref int __result)
+		private static bool PatchPing(ref int __result)
 		{
 			if (PreferencePing.Value < 0) return true;
 			__result = PreferencePing.Value;
