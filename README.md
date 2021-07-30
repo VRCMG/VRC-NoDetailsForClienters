@@ -11,6 +11,12 @@ To use: Install [MelonLoader](https://melonwiki.xyz), and drag the dll file into
 
 Then you can edit the values in the MelonPreferences or with UIX.
 
+## TODO
+
+* Possibly spoof platform?
+* IP address -> Should use VPN.
+* HWID? Knah has made a mod for it.
+
 ## Building
 
 Open in Visual Studio, copy the few Melonloader DLLs into the Libs folder and press build.
