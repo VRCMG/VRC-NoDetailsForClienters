@@ -5,6 +5,16 @@ A mod to spoof values such as FPS and Ping.
 Because some VRC mods show those values for other people.
 Even though they're normally meant to be only visible to yourself in the game's UI.
 
+## Warning
+
+Modding is of course against VRC TOS. And of course this mod is provided without any warranty.
+
+As an additional warning, the reason this mod's not verified in the modding group is as follows:
+
+> Ping/FPS spoofing is known to break IK interpolation, is easily detectable by VRC (if they wanted to), and those numbers are available in vanilla client via debug overlays. Lots of downsides for vanishingly little benefit
+
+I personally believe though that it should be up to each individual to determine if the benefits outweigh the downsides.
+
 ## Usage
 
 To use: Install [MelonLoader](https://melonwiki.xyz), and drag the dll file into the Mods folder under your VRChat installation directory.
@@ -19,11 +29,12 @@ As far as I'm aware, though, remote clients can't see your deltaTime.
 null mentioned the values to spoof in the [VRC modding discord](https://discord.gg/7EQCmgrUnH).
 Which made implementing this mod rather quick & easy, so huge props to them.
 
-## TODO
+## Spoofing other values
 
-* Possibly spoof platform?
-* IP address -> Should use VPN.
-* HWID? Knah has made a mod for it.
+* Platform: possible feature I guess? PR's welcome
+* IP address: use a VPN.
+* HWID: use [Knah's NoSteamAtAll](https://github.com/knah/ML-UniversalMods#hwidpatch)
+* SteamID: use [Knah's NoSteamAtAll](https://github.com/knah/ML-UniversalMods#nosteamatall) to disable having a SteamID
 
 ## Building
 
