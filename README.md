@@ -11,6 +11,9 @@ To use: Install [MelonLoader](https://melonwiki.xyz), and drag the dll file into
 
 Then you can edit the values in the MelonPreferences or with UIX.
 
+Note that if some mod (such as PlayerList) uses a different method such as deltaTime to get your own FPS, it'll display the real FPS.
+As far as I'm aware, though, remote clients can't see your deltaTime.
+
 ## TODO
 
 * Possibly spoof platform?
