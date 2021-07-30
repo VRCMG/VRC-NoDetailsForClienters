@@ -26,8 +26,10 @@ namespace NoDetailsForClienters
 		private const string PreferencesIdentifier = "NoDetailsForClienters";
 		private static MelonPreferences_Category PreferencesCategory;
 		private static MelonPreferences_Entry<float> PreferenceFPS, PreferenceFPSVariance;
+		private static float VarianceFPS = 0f;
 		private static MelonPreferences_Entry<int> PreferencePing, PreferencePingVariance;
-
+		private static int VariancePing = 0;
+		private System.DateTime _next_variance_update_after = System.DateTime.Now;
 
 		public override void OnApplicationStart()
 		{
@@ -62,25 +64,36 @@ namespace NoDetailsForClienters
 			}
 		}
 
+		public override void OnFixedUpdate()
+		{
+			if (_next_variance_update_after < System.DateTime.Now)
+			{
+				_next_variance_update_after = System.DateTime.Now.AddSeconds(1);
+				if (PreferenceFPSVariance.Value > 0)
+					VarianceFPS += (PreferenceFPSVariance.Value) * (float)(new System.Random().NextDouble());
+				else VarianceFPS = 0f;
+
+				if (PreferencePingVariance.Value > 0)
+					VariancePing += new System.Random().Next(0, PreferencePingVariance.Value);
+				else VariancePing = 0;
+			}
+		}
+
 
 
 		private static bool PatchFPS(ref float __result)
 		{
 			if (PreferenceFPS.Value < 0) return true;
 			var val = PreferenceFPS.Value;
-			if (PreferenceFPSVariance.Value > 0)
-				val += (PreferenceFPSVariance.Value) * (float)(new System.Random().NextDouble());
-			__result = 1f / val;
+
+			__result = 1f / (val + VarianceFPS);
 			return false;
 		}
 
 		private static bool PatchPing(ref int __result)
 		{
 			if (PreferencePing.Value < 0) return true;
-			var val = PreferencePing.Value;
-			if (PreferencePingVariance.Value > 0)
-				val += new System.Random().Next(0, PreferencePingVariance.Value);
-			__result = val;
+			__result = PreferencePing.Value + VariancePing;
 			return false;
 		}
 	}
