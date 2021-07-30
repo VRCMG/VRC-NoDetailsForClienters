@@ -2,10 +2,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{73A49EF5-3064-4402-8924-31A08F130A97}</ProjectGuid>
+    <ProjectGuid>{157CF94A-B236-2DC7-8280-60E3583C93E8}</ProjectGuid>
     <OutputType>Library</OutputType>
     <NoStandardLibraries>false</NoStandardLibraries>
-    <AssemblyName>TrustColorChanger</AssemblyName>
+    <AssemblyName>NoDetailsForClienters</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -30,7 +30,7 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
-    <RootNamespace>TrustColorChanger</RootNamespace>
+    <RootNamespace>NoDetailsForClienters</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Assembly-CSharp">
