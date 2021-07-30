@@ -14,6 +14,11 @@ Then you can edit the values in the MelonPreferences or with UIX.
 Note that if some mod (such as PlayerList) uses a different method such as deltaTime to get your own FPS, it'll display the real FPS.
 As far as I'm aware, though, remote clients can't see your deltaTime.
 
+## Attribution
+
+null mentioned the values to spoof in the [VRC modding discord](https://discord.gg/7EQCmgrUnH).
+Which made implementing this mod rather quick & easy, so huge props to them.
+
 ## TODO
 
 * Possibly spoof platform?
