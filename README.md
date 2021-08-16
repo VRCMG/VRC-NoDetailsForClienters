@@ -35,7 +35,7 @@ Which made implementing this mod rather quick & easy, so huge props to them.
 
 * Platform: possible feature I guess? PR's welcome
 * IP address: use a VPN.
-* HWID: use [Knah's NoSteamAtAll](https://github.com/knah/ML-UniversalMods#hwidpatch)
+* HWID: use [Knah's HWID patch](https://github.com/knah/ML-UniversalMods#hwidpatch)
 * SteamID: use [Knah's NoSteamAtAll](https://github.com/knah/ML-UniversalMods#nosteamatall) to disable having a SteamID
 
 ## Building
