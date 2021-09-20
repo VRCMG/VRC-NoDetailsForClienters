@@ -1,3 +1,5 @@
+Moving to a single repo; <https://github.com/ljoonal/VRC-Mods> (or for upstream: <https://vrc.ljoonal.xyz> )
+
 # NoDetailsForClienters
 
 A mod to spoof values such as FPS and Ping.
